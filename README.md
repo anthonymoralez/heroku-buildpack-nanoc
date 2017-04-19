@@ -7,7 +7,13 @@ for Nanoc with Nginx.
 Usage
 -----
 
-Just push your nanoc site containing the config.yml file and the Gemfile to Heroku and you're ready to go.
+```
+heroku buildpacks:clear
+heroku buildpacks:add heroku/ruby
+heroku buildpacks:add https://github.com/anthonymoralez/heroku-buildpack-nanoc
+```
+Assumes you have a Procfile that runs a Rack server to server your content.
+Just push your nanoc site containing the nanoc.yml file and the Gemfile to Heroku and you're ready to go.
 
 Credits
 -------
