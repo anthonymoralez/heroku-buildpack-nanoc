@@ -67,10 +67,10 @@ mkdir -p "$BUILD_DIR/bin"
 cp "$VENDORED_NGINX/sbin/nginx" "$BUILD_DIR/bin/nginx"
 mkdir -p "$BUILD_DIR/conf"
 if [ ! -f "$SITE_DIR/conf/nginx.conf.erb" ]; then
-  echo "Use nginx configuration in buildpack (conf/nginx.conf.erb)" | indent
+  echo "Use nginx configuration in buildpack (conf/nginx.conf.erb)"
   cp "$BUILDPACK_DIR/support/nginx.conf.erb" "$BUILD_DIR/conf/nginx.conf.erb"
 else
-  echo "Use nginx configuration in application (conf/nginx.conf.erb)" | indent
+  echo "Use nginx configuration in application (conf/nginx.conf.erb)"
   cp "$SITE_DIR/conf/nginx.conf.erb" "$BUILD_DIR/conf/nginx.conf.erb"
 fi
 
