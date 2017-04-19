@@ -43,7 +43,7 @@ enable_output_diff: false
 EOF
 
 # go go gadget nanoc!
-bundle exec nanoc compile | indent
+bundle exec nanoc compile
 
 # and copy it back
 cp -r $OUTPUT_DIR $BUILD_DIR/html
