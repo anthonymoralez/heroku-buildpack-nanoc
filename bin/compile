@@ -38,26 +38,7 @@ rm -rf $SITE_DIR/*
 mkdir -p $SITE_DIR
 mv * $SITE_DIR
 
-# set up gemrc
-cat << EOF > ~/.gemrc
-gem: --no-rdoc --no-ri
-gemhome: $GEM_DIR
-gempath:
-- $GEM_DIR
-EOF
-
-# install bundler
-/usr/local/bin/gem install bundler > /dev/null
-
 cd $SITE_DIR
-
-# install nanoc
-if [ ! -f $SITE_DIR/Gemfile ]; then
-    echo "Gemfile not found" | indent
-    exit 1
-fi
-
-$GEM_DIR/bin/bundle install --gemfile $SITE_DIR/Gemfile --deployment --path $GEM_DIR | grep 'Installing' | indent
 
 echo "-----> Compiling Nanoc site"
 
