@@ -10,77 +10,11 @@ BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
 # =========> Nanoc
 
 echo "-----> Installing Nanoc"
-SITE_DIR=$CACHE_DIR/site
-OUTPUT_DIR=$CACHE_DIR/output
-GEM_DIR=$CACHE_DIR/vendor/bundle
-
 export LANG=en_US.UTF-8
-export GEM_HOME=$GEM_DIR
-export PATH=$GEM_DIR/bin:$PATH
+echo "----> \$PATH= $PATH"
 
 # include .files when moving things around
 shopt -s dotglob
 
-cd $BUILD_DIR
 
-# move site directory to site dir
-rm -rf $SITE_DIR/*
-mkdir -p $SITE_DIR
-mv * $SITE_DIR
-
-cd $SITE_DIR
-
-echo "-----> Compiling Nanoc site"
-
-# set up nanoc config
-config_path=$SITE_DIR/config.yaml
-if [ -f $1/nanoc.yaml ]; then
-  config_path=$SITE_DIR/nanoc.yaml
-fi
-cat << EOF >> $config_path
-output_dir: $OUTPUT_DIR
-enable_output_diff: false
-EOF
-
-# go go gadget nanoc!
-bundle exec nanoc compile
-
-# and copy it back
-cp -r $OUTPUT_DIR $BUILD_DIR/html
-
-
-# =========> Nginx
-
-# s3 packages
-NGINX_PACKAGE="http://${S3_BUCKET}.s3.amazonaws.com/nginx-${NGINX_VERSION}.tgz"
-
-# vendor directories
-VENDORED_NGINX=$(mktemp -d -t nginx.XXXXXX)
-
-# download and upack packages
-echo "-----> Fetching nginx binaries"
-curl $NGINX_PACKAGE -s -o - | tar xzf - -C $VENDORED_NGINX
-
-# vendor nginx into the slug
-echo "-----> Vendoring nginx $NGINX_VERSION"
-mkdir -p "$BUILD_DIR/bin"
-cp "$VENDORED_NGINX/sbin/nginx" "$BUILD_DIR/bin/nginx"
-mkdir -p "$BUILD_DIR/conf"
-if [ ! -f "$SITE_DIR/conf/nginx.conf.erb" ]; then
-  echo "Use nginx configuration in buildpack (conf/nginx.conf.erb)"
-  cp "$BUILDPACK_DIR/support/nginx.conf.erb" "$BUILD_DIR/conf/nginx.conf.erb"
-else
-  echo "Use nginx configuration in application (conf/nginx.conf.erb)"
-  cp "$SITE_DIR/conf/nginx.conf.erb" "$BUILD_DIR/conf/nginx.conf.erb"
-fi
-
-# build a startup script
-cat <<EOF >"$BUILD_DIR/bin/start_nginx"
-#!/usr/bin/env bash
-erb conf/nginx.conf.erb > conf/nginx.conf
-mkdir -p logs
-touch logs/access.log logs/error.log
-(tail -qF -n 0 --pid=\$\$ logs/*.log &)
-exec bin/nginx -p .
-EOF
-chmod +x "$BUILD_DIR/bin/start_nginx"
+exit -1
