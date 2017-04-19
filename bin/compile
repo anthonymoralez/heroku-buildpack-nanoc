@@ -8,13 +8,8 @@ BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
 
 
 # =========> Nanoc
-
-echo "-----> Installing Nanoc"
+echo "-----> Compiling Nanoc Site"
 export LANG=en_US.UTF-8
-echo "----> \$PATH= $PATH"
 
-# include .files when moving things around
-shopt -s dotglob
-
-
-exit -1
+cd $BUILD_DIR
+bundle exec nanoc
