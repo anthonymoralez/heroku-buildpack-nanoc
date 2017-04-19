@@ -1,16 +1,6 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir>
 
-indent() {
-  sed -u 's/^/       /'
-}
-
-set -e
-
-# config
-NGINX_VERSION="1.2.7"
-S3_BUCKET="simplificator-heroku-buildpack-nanoc"
-
 # parse and derive params
 BUILD_DIR=$1
 CACHE_DIR=$2
@@ -53,7 +43,7 @@ enable_output_diff: false
 EOF
 
 # go go gadget nanoc!
-$GEM_DIR/bin/bundle exec nanoc compile | indent
+bundle exec nanoc compile | indent
 
 # and copy it back
 cp -r $OUTPUT_DIR $BUILD_DIR/html
